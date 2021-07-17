@@ -1,14 +1,20 @@
 import React, {useContext} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {HomeScreen} from '../screen/HomeScreen';
 import {PermissionScreen} from '../screen/PermissionScreen';
 import {PermissionsContext} from '../context/permission/PermissionsContext';
 import {Loading} from '../components/Loading';
+import {MyDrawer} from './Drawer';
+import {ThemeContext} from '../context/theme/ThemeContext';
 
 const Stack = createStackNavigator();
 
 export const Navigator = () => {
   const {permissions} = useContext(PermissionsContext);
+  const {
+    theme: {
+      colors: {background},
+    },
+  } = useContext(ThemeContext);
 
   if (permissions.locationStatus === 'unavailable') {
     return <Loading />;
@@ -19,13 +25,13 @@ export const Navigator = () => {
       screenOptions={{
         headerShown: false,
         cardStyle: {
-          backgroundColor: 'white',
+          backgroundColor: background,
         },
       }}>
       {permissions.locationStatus !== 'granted' ? (
         <Stack.Screen name="PermissionScreen" component={PermissionScreen} />
       ) : (
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="HomeScreen" component={MyDrawer} />
       )}
     </Stack.Navigator>
   );
