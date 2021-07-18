@@ -7,6 +7,19 @@ export const OBTENER_EMPRESAS = gql`
       nombre
       apellido
       email
+      token
+    }
+  }
+`;
+
+export const LOGIN = gql`
+  mutation autenticarUsuario($input: InputAutenticarUsuario) {
+    autenticarUsuario(input: $input) {
+      id
+      nombre
+      apellido
+      email
+      token
     }
   }
 `;

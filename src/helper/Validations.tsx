@@ -15,3 +15,11 @@ export const validationNewUser = yup.object().shape({
     .string()
     .oneOf([yup.ref('password'), null], 'Las contraseñas deben ser iguales'),
 });
+
+export const validarLogin = yup.object().shape({
+  email: yup
+    .string()
+    .email('Ingresa un email válido')
+    .required('Ingresa un email'),
+  password: yup.string().required('Se requiere contraseña'),
+});

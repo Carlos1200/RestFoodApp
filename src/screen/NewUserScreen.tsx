@@ -18,30 +18,34 @@ import {validationNewUser} from '../helper/Validations';
 import {AuthContext} from '../context/auth/AuthContext';
 import {NuevoUsuario} from '../interfaces/app-interfaces';
 import {OBTENER_EMPRESAS} from '../helper/Mutations';
-import {CustomAlert} from '../components/CustomAlert';
 
 interface Props extends StackScreenProps<any, any> {}
 
 export const NewUserScreen = ({navigation}: Props) => {
-  const {NewUser} = useContext(AuthContext);
+  const {LogIn} = useContext(AuthContext);
   const [nuevoUsuario] = useMutation(OBTENER_EMPRESAS);
-  const [show, setShow] = useState(false);
+  const [error, setError] = useState();
 
   const createUser = async (value: NuevoUsuario) => {
     const {nombre, apellido, email, password} = value;
-    const {data} = await nuevoUsuario({
-      variables: {
-        input: {
-          nombre,
-          apellido,
-          email,
-          password,
+    try {
+      const {data} = await nuevoUsuario({
+        variables: {
+          input: {
+            nombre,
+            apellido,
+            email,
+            password,
+          },
         },
-      },
-    });
-
-    NewUser(data.nuevoUsuario);
-    setShow(true);
+      });
+      LogIn(data.nuevoUsuario);
+    } catch (error) {
+      setError(error.message);
+      setTimeout(() => {
+        setError(undefined);
+      }, 3000);
+    }
   };
   return (
     <>
@@ -55,11 +59,22 @@ export const NewUserScreen = ({navigation}: Props) => {
         }}
         onSubmit={values => createUser(values)}
         validationSchema={validationNewUser}>
-        {({values, handleChange, errors, handleSubmit}) => (
+        {({values, handleChange, errors, handleSubmit, touched}) => (
           <>
             <Background />
             <ScrollView>
               <HeaderTitle title="RestFood" style={{marginTop: 60}} />
+
+              {error && (
+                <Text
+                  style={{
+                    ...styles.errorText,
+                    fontSize: 18,
+                    borderLeftWidth: 0,
+                  }}>
+                  {error}
+                </Text>
+              )}
 
               <View style={{marginVertical: 20, marginHorizontal: 20}}>
                 <View style={{marginVertical: 10}}>
@@ -72,6 +87,9 @@ export const NewUserScreen = ({navigation}: Props) => {
                     value={values.nombre}
                   />
                 </View>
+                {touched.nombre && errors.nombre && (
+                  <Text style={styles.errorText}>{errors.nombre}</Text>
+                )}
                 <View style={{marginVertical: 10}}>
                   <Text style={styles.labelInput}>Apellido:</Text>
                   <CustomInput
@@ -82,6 +100,9 @@ export const NewUserScreen = ({navigation}: Props) => {
                     value={values.apellido}
                   />
                 </View>
+                {touched.apellido && errors.apellido && (
+                  <Text style={styles.errorText}>{errors.apellido}</Text>
+                )}
                 <View style={{marginVertical: 10}}>
                   <Text style={styles.labelInput}>Correo:</Text>
                   <CustomInput
@@ -91,6 +112,9 @@ export const NewUserScreen = ({navigation}: Props) => {
                     value={values.email}
                   />
                 </View>
+                {touched.email && errors.email && (
+                  <Text style={styles.errorText}>{errors.email}</Text>
+                )}
                 <View style={{marginVertical: 10}}>
                   <Text style={styles.labelInput}>Contraseña:</Text>
                   <TextInput
@@ -107,6 +131,9 @@ export const NewUserScreen = ({navigation}: Props) => {
                     value={values.password}
                   />
                 </View>
+                {touched.password && errors.password && (
+                  <Text style={styles.errorText}>{errors.password}</Text>
+                )}
                 <View style={{marginVertical: 10}}>
                   <Text style={styles.labelInput}>Repetir Contraseña:</Text>
                   <TextInput
@@ -123,6 +150,9 @@ export const NewUserScreen = ({navigation}: Props) => {
                     value={values.rePassword}
                   />
                 </View>
+                {touched.rePassword && errors.rePassword && (
+                  <Text style={styles.errorText}>{errors.rePassword}</Text>
+                )}
                 <View
                   style={{
                     alignItems: 'center',
@@ -144,15 +174,6 @@ export const NewUserScreen = ({navigation}: Props) => {
           </>
         )}
       </Formik>
-      <CustomAlert
-        title="Exito"
-        message="Usuario Creado"
-        show={show}
-        setShow={() => {
-          setShow(false);
-          navigation.replace('LoginScreen');
-        }}
-      />
     </>
   );
 };
@@ -182,5 +203,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 10,
     color: 'white',
+  },
+  errorText: {
+    fontSize: 12,
+    color: '#FF0D10',
+    borderLeftWidth: 2,
+    borderLeftColor: '#FF0D10',
+    paddingLeft: 8,
   },
 });

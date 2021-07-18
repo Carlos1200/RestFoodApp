@@ -1,6 +1,6 @@
 import {Usuario} from '../../interfaces/app-interfaces';
 
-type AuthAction = {type: 'new_user'; payload: Usuario} | {type: 'login'};
+type AuthAction = {type: 'login'; payload: Usuario};
 
 export interface AuthState {
   id: string;
@@ -15,13 +15,14 @@ export const AuthReducer = (
   action: AuthAction,
 ): AuthState => {
   switch (action.type) {
-    case 'new_user':
+    case 'login':
       return {
         ...state,
         id: action.payload.id,
         nombre: action.payload.nombre,
         apellido: action.payload.apellido,
         email: action.payload.email,
+        token: action.payload.token,
       };
     default:
       return state;
