@@ -13,12 +13,13 @@ export const CustomButton = ({iconName, title, onPress}: Props) => {
   const {theme} = useContext(ThemeContext);
   const {
     colors: {primary, text},
+    activeColor,
   } = theme;
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.8}
-      style={{...styles.button, backgroundColor: primary}}>
+      style={{...styles.button, backgroundColor: activeColor}}>
       <Icon name={iconName} color={text} size={30} />
       <Text style={{...styles.buttonText, color: text}}>{title}</Text>
     </TouchableOpacity>

@@ -16,7 +16,7 @@ export const lightTheme: ThemeState = {
   activeColor: '',
   drawerBG: '',
   colors: {
-    primary: '#084F6A',
+    primary: '#3F3F77',
     background: 'white',
     card: 'black',
     text: 'black',
@@ -28,7 +28,7 @@ export const darkTheme: ThemeState = {
   currentTheme: 'dark',
   dark: true,
   dividerColor: 'rgba(255,255,255,0.7)',
-  activeColor: '#191949',
+  activeColor: '#1d1746',
   drawerBG: '#181818',
   colors: {
     primary: '#3F3F77',

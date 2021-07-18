@@ -1,31 +1,48 @@
-import React, {useContext} from 'react';
-import {StyleSheet, TextInput} from 'react-native';
+import React, {ChangeEvent, useContext} from 'react';
+import {KeyboardTypeOptions, StyleSheet, TextInput} from 'react-native';
 import {ThemeContext} from '../context/theme/ThemeContext';
 
 interface Props {
   placeholder: string;
-  onChange: <K extends Object>(value: K) => void;
+  onChange: (e: string | ChangeEvent<any>) => void;
+  type: KeyboardTypeOptions;
+  password?: boolean;
+  correct?: boolean;
+  capitalize?: 'none' | 'words' | 'sentences' | 'characters';
+  value: any;
 }
 
-export const CustomInput = ({onChange, placeholder}: Props) => {
+export const CustomInput = ({
+  onChange,
+  placeholder,
+  type,
+  password = false,
+  correct = false,
+  capitalize = 'none',
+  value,
+}: Props) => {
   const {
     theme: {colors},
   } = useContext(ThemeContext);
   return (
-    <TextInput
-      style={{
-        ...styles.inputStyle,
-        borderColor: colors.border,
-        color: colors.text,
-      }}
-      placeholder={placeholder}
-      placeholderTextColor={colors.text}
-      autoCorrect
-      autoCapitalize="words"
-      onChangeText={onChange}
-      keyboardType="email-address"
-      keyboardAppearance="dark"
-    />
+    <>
+      <TextInput
+        style={{
+          ...styles.inputStyle,
+          borderColor: colors.border,
+          color: colors.text,
+        }}
+        placeholder={placeholder}
+        placeholderTextColor={colors.text}
+        autoCorrect={correct}
+        secureTextEntry={password}
+        autoCapitalize={capitalize}
+        onChangeText={onChange}
+        keyboardType={type}
+        keyboardAppearance="dark"
+        value={value}
+      />
+    </>
   );
 };
 
