@@ -8,6 +8,8 @@ export interface AuthState {
   apellido: string;
   email: string;
   token?: string;
+  photo?: string;
+  google?: boolean;
 }
 
 export const AuthReducer = (
@@ -23,6 +25,8 @@ export const AuthReducer = (
         apellido: action.payload.apellido,
         email: action.payload.email,
         token: action.payload.token,
+        photo: action.payload.photo,
+        google: action.payload.google,
       };
     default:
       return state;

@@ -19,14 +19,22 @@ import {validarLogin} from '../helper/Validations';
 import {LOGIN} from '../helper/Mutations';
 import {Login} from '../interfaces/app-interfaces';
 import {AuthContext} from '../context/auth/AuthContext';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+} from '@react-native-google-signin/google-signin';
+GoogleSignin.configure({
+  webClientId:
+    '52326549780-l25bc8s7tjhtl9012gp84tj1du0f0vhv.apps.googleusercontent.com',
+  offlineAccess: true,
+});
 
 interface Props extends StackScreenProps<any, any> {}
 
 export const LoginScreen = ({navigation}: Props) => {
-  const {LogIn} = useContext(AuthContext);
+  const {LogIn, GoogleLogIn} = useContext(AuthContext);
   const [autenticarUsuario] = useMutation(LOGIN);
   const [error, setError] = useState();
-
   const autenticar = async (value: Login) => {
     const {email, password} = value;
     try {
@@ -39,6 +47,34 @@ export const LoginScreen = ({navigation}: Props) => {
         },
       });
       LogIn(data.autenticarUsuario);
+    } catch (error) {
+      setError(error.message);
+      setTimeout(() => {
+        setError(undefined);
+      }, 3000);
+    }
+  };
+
+  const autenticarGoogle = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const resp = await GoogleSignin.signIn();
+      const {
+        idToken,
+        user: {id, name, familyName, email, photo},
+      } = resp;
+      const data = {
+        id,
+        nombre: name || 'Usuario',
+        apellido: familyName || 'Apellido Usuario',
+        email,
+        photo: photo || '',
+        google: true,
+        token: idToken || '',
+      };
+      GoogleLogIn({
+        ...data,
+      });
     } catch (error) {
       setError(error.message);
       setTimeout(() => {
@@ -124,6 +160,12 @@ export const LoginScreen = ({navigation}: Props) => {
                     onPress={() => navigation.replace('NewUserScreen')}>
                     <Text style={styles.textButton}>Crear Cuenta</Text>
                   </TouchableOpacity>
+
+                  <GoogleSigninButton
+                    onPress={autenticarGoogle}
+                    size={GoogleSigninButton.Size.Standard}
+                    color={GoogleSigninButton.Color.Dark}
+                  />
                 </View>
               </View>
             </ScrollView>

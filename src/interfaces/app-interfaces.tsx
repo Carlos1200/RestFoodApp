@@ -9,6 +9,8 @@ export interface Usuario {
   apellido: string;
   email: string;
   token?: string;
+  photo?: string;
+  google?: boolean;
 }
 
 export interface NuevoUsuario {
