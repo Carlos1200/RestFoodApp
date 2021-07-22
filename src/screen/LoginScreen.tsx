@@ -16,7 +16,7 @@ import {CustomInput} from '../components/CustomInput';
 import {CustomButton} from '../components/CustomButton';
 import {StackScreenProps} from '@react-navigation/stack';
 import {validarLogin} from '../helper/Validations';
-import {LOGIN} from '../helper/Mutations';
+import {LOGIN, LOGIN_GOOGLE} from '../helper/Mutations';
 import {Login} from '../interfaces/app-interfaces';
 import {AuthContext} from '../context/auth/AuthContext';
 import {
@@ -32,8 +32,9 @@ GoogleSignin.configure({
 interface Props extends StackScreenProps<any, any> {}
 
 export const LoginScreen = ({navigation}: Props) => {
-  const {LogIn, GoogleLogIn} = useContext(AuthContext);
+  const {LogIn} = useContext(AuthContext);
   const [autenticarUsuario] = useMutation(LOGIN);
+  const [nuevoUsuarioGoogle] = useMutation(LOGIN_GOOGLE);
   const [error, setError] = useState();
   const autenticar = async (value: Login) => {
     const {email, password} = value;
@@ -46,7 +47,10 @@ export const LoginScreen = ({navigation}: Props) => {
           },
         },
       });
-      LogIn(data.autenticarUsuario);
+      LogIn({
+        usuario: data.nuevoUsuario.usuario,
+        token: data.nuevoUsuario.token,
+      });
     } catch (error) {
       setError(error.message);
       setTimeout(() => {
@@ -59,21 +63,17 @@ export const LoginScreen = ({navigation}: Props) => {
     try {
       await GoogleSignin.hasPlayServices();
       const resp = await GoogleSignin.signIn();
-      const {
-        idToken,
-        user: {id, name, familyName, email, photo},
-      } = resp;
-      const data = {
-        id,
-        nombre: name || 'Usuario',
-        apellido: familyName || 'Apellido Usuario',
-        email,
-        photo: photo || '',
-        google: true,
-        token: idToken || '',
-      };
-      GoogleLogIn({
-        ...data,
+      const {idToken} = resp;
+
+      const {data} = await nuevoUsuarioGoogle({
+        variables: {
+          tokenGoogle: idToken,
+        },
+      });
+
+      LogIn({
+        usuario: data.nuevoUsuarioGoogle.usuario,
+        token: data.nuevoUsuarioGoogle.token,
       });
     } catch (error) {
       setError(error.message);

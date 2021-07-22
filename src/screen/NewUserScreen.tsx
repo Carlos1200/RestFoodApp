@@ -16,17 +16,17 @@ import {CustomInput} from '../components/CustomInput';
 import {HeaderTitle} from '../components/HeaderTitle';
 import {validationNewUser} from '../helper/Validations';
 import {AuthContext} from '../context/auth/AuthContext';
-import {NuevoUsuario} from '../interfaces/app-interfaces';
-import {OBTENER_EMPRESAS} from '../helper/Mutations';
+import {NewUsuario} from '../interfaces/app-interfaces';
+import {CREAR_USUARIO} from '../helper/Mutations';
 
 interface Props extends StackScreenProps<any, any> {}
 
 export const NewUserScreen = ({navigation}: Props) => {
   const {LogIn} = useContext(AuthContext);
-  const [nuevoUsuario] = useMutation(OBTENER_EMPRESAS);
+  const [nuevoUsuario] = useMutation(CREAR_USUARIO);
   const [error, setError] = useState();
 
-  const createUser = async (value: NuevoUsuario) => {
+  const createUser = async (value: NewUsuario) => {
     const {nombre, apellido, email, password} = value;
     try {
       const {data} = await nuevoUsuario({
@@ -39,7 +39,10 @@ export const NewUserScreen = ({navigation}: Props) => {
           },
         },
       });
-      LogIn(data.nuevoUsuario);
+      LogIn({
+        usuario: data.nuevoUsuario.usuario,
+        token: data.nuevoUsuario.token,
+      });
     } catch (error) {
       setError(error.message);
       setTimeout(() => {

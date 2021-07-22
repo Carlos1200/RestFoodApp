@@ -1,14 +1,18 @@
-import {Usuario} from '../../interfaces/app-interfaces';
+import {UsuarioToken} from '../../interfaces/app-interfaces';
 
-type AuthAction = {type: 'login'; payload: Usuario};
+type AuthAction =
+  | {type: 'login'; payload: UsuarioToken}
+  | {type: 'notAuthenticated'}
+  | {type: 'logOut'};
 
 export interface AuthState {
-  id: string;
-  nombre: string;
-  apellido: string;
-  email: string;
-  token?: string;
-  photo?: string;
+  status: 'checking' | 'authenticated' | 'not-authenticated';
+  id: string | null;
+  nombre: string | null;
+  apellido: string | null;
+  email: string | null;
+  token?: string | null;
+  photo?: string | null;
   google?: boolean;
 }
 
@@ -18,15 +22,30 @@ export const AuthReducer = (
 ): AuthState => {
   switch (action.type) {
     case 'login':
+      const {id, nombre, apellido, email, photo, google} =
+        action.payload.usuario;
       return {
         ...state,
-        id: action.payload.id,
-        nombre: action.payload.nombre,
-        apellido: action.payload.apellido,
-        email: action.payload.email,
+        id,
+        nombre,
+        apellido,
+        email,
         token: action.payload.token,
-        photo: action.payload.photo,
-        google: action.payload.google,
+        photo,
+        google,
+        status: 'authenticated',
+      };
+    case 'notAuthenticated':
+    case 'logOut':
+      return {
+        ...state,
+        status: 'not-authenticated',
+        token: null,
+        id: null,
+        nombre: null,
+        apellido: null,
+        email: null,
+        photo: null,
       };
     default:
       return state;

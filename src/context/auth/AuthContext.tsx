@@ -1,12 +1,12 @@
-import React, {createContext, useReducer} from 'react';
+import React, {createContext, useEffect, useReducer} from 'react';
 import {AuthReducer, AuthState} from './AuthReducer';
-import {Usuario} from '../../interfaces/app-interfaces';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {Usuario, UsuarioToken} from '../../interfaces/app-interfaces';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type AuthContextProps = {
   state: AuthState;
-  LogIn: (values: Usuario) => Promise<void>;
-  GoogleLogIn: (values: Usuario) => Promise<void>;
+  LogIn: (values: UsuarioToken) => Promise<void>;
+  notAuthenticatedToken: () => void;
 };
 
 export const AuthContext = createContext({} as AuthContextProps);
@@ -19,41 +19,22 @@ const initialValues: AuthState = {
   token: '',
   photo: '',
   google: false,
+  status: 'checking',
 };
 
 export const AuthProvider = ({children}: any) => {
   const [state, dispatch] = useReducer(AuthReducer, initialValues);
 
-  const LogIn = async ({id, nombre, apellido, email, token}: Usuario) => {
+  const LogIn = async ({usuario, token}: UsuarioToken) => {
+    await AsyncStorage.setItem('token', token);
     dispatch({
       type: 'login',
-      payload: {id, nombre, apellido, email, token},
+      payload: {usuario, token},
     });
   };
-  const GoogleLogIn = async ({
-    id,
-    nombre,
-    apellido,
-    email,
-    token,
-    photo,
-  }: Usuario) => {
-    try {
-      dispatch({
-        type: 'login',
-        payload: {
-          id,
-          nombre,
-          apellido,
-          email,
-          photo,
-          token,
-          google: true,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+
+  const notAuthenticatedToken = () => {
+    dispatch({type: 'notAuthenticated'});
   };
 
   return (
@@ -61,7 +42,7 @@ export const AuthProvider = ({children}: any) => {
       value={{
         state,
         LogIn,
-        GoogleLogIn,
+        notAuthenticatedToken,
       }}>
       {children}
     </AuthContext.Provider>
