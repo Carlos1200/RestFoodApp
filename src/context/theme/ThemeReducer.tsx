@@ -29,10 +29,10 @@ export const darkTheme: ThemeState = {
   dark: true,
   dividerColor: 'rgba(255,255,255,0.7)',
   activeColor: '#1d1746',
-  drawerBG: '#181818',
+  drawerBG: '#2b2a33',
   colors: {
     primary: '#3F3F77',
-    background: 'black',
+    background: '#2b2a33',
     card: 'white',
     text: 'white',
     border: 'white',

@@ -23,3 +23,12 @@ export const validarLogin = yup.object().shape({
     .required('Ingresa un email'),
   password: yup.string().required('Se requiere contraseña'),
 });
+
+export const validationNuevaSucursal = yup.object().shape({
+  nombre: yup.string().required('Ingresar un nombre de la sucursal'),
+  tipo: yup.string().required('Selecciona un tipo de sucursal'),
+  // diasLaboral: yup
+  //   .array()
+  //   .min(1, 'Selecciona como mínimo 1 día laboral')
+  //   .required('Selecciona un día laboral '),
+});

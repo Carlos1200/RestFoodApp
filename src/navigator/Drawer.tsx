@@ -15,8 +15,7 @@ const Drawer = createDrawerNavigator<RootDrawerParams>();
 export const MyDrawer = () => {
   const {
     theme: {
-      activeColor,
-      colors: {background, primary},
+      colors: {background},
     },
   } = useContext(ThemeContext);
   return (

@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {View} from 'react-native';
-import {Fab} from '../components/Fab';
+import {Fab} from '../components/customs/Fab';
 import {Map} from '../components/Map';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import {RootDrawerParams} from '../navigator/Drawer';

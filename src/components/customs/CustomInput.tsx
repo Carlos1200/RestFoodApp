@@ -1,6 +1,12 @@
 import React, {ChangeEvent, useContext} from 'react';
-import {KeyboardTypeOptions, StyleSheet, TextInput} from 'react-native';
-import {ThemeContext} from '../context/theme/ThemeContext';
+import {
+  KeyboardTypeOptions,
+  StyleProp,
+  StyleSheet,
+  TextInput,
+  TextStyle,
+} from 'react-native';
+import {ThemeContext} from '../../context/theme/ThemeContext';
 
 interface Props {
   placeholder: string;
@@ -8,16 +14,22 @@ interface Props {
   type: KeyboardTypeOptions;
   password?: boolean;
   correct?: boolean;
+  multiple?: boolean;
+  lines?: number;
   capitalize?: 'none' | 'words' | 'sentences' | 'characters';
   value: any;
+  style?: StyleProp<TextStyle>;
 }
 
 export const CustomInput = ({
+  style = {},
   onChange,
   placeholder,
   type,
   password = false,
   correct = false,
+  multiple = false,
+  lines = 1,
   capitalize = 'none',
   value,
 }: Props) => {
@@ -29,11 +41,14 @@ export const CustomInput = ({
       <TextInput
         style={{
           ...styles.inputStyle,
+          ...(style as any),
           borderColor: colors.border,
           color: colors.text,
         }}
         placeholder={placeholder}
         placeholderTextColor={colors.text}
+        multiline={multiple}
+        numberOfLines={lines}
         autoCorrect={correct}
         secureTextEntry={password}
         autoCapitalize={capitalize}

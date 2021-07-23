@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   StyleProp,
   TouchableOpacity,
@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {ThemeContext} from '../../context/theme/ThemeContext';
 
 interface Props {
   iconName: string;
@@ -15,12 +16,15 @@ interface Props {
 }
 
 export const Fab = ({iconName, onPress, style = {}}: Props) => {
+  const {
+    theme: {drawerBG},
+  } = useContext(ThemeContext);
   return (
     <View style={{...(style as any)}}>
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={onPress}
-        style={styles.blackButtom}>
+        style={{...styles.blackButtom, backgroundColor: drawerBG}}>
         <Icon name={iconName} color="white" size={35} style={{left: 1}} />
       </TouchableOpacity>
     </View>

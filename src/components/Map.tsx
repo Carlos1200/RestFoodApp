@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import MapView, {Marker, Polyline} from 'react-native-maps';
 import {useLocation} from '../hooks/useLocation';
-import {Fab} from './Fab';
+import {Fab} from './customs/Fab';
 import {Loading} from './Loading';
 
 interface Props {
