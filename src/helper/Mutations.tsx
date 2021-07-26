@@ -62,3 +62,11 @@ export const VALIDAR_TOKEN = gql`
     }
   }
 `;
+
+export const NUEVA_EMPRESA = gql`
+  mutation nuevaEmpresa($input: InputEmpresa) {
+    nuevaEmpresa(input: $input) {
+      id
+    }
+  }
+`;

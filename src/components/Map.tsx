@@ -1,14 +1,15 @@
 import React, {useEffect, useRef, useState} from 'react';
-import MapView, {Marker, Polyline} from 'react-native-maps';
+import MapView, {MapEvent, Marker, Polyline} from 'react-native-maps';
 import {useLocation} from '../hooks/useLocation';
 import {Fab} from './customs/Fab';
 import {Loading} from './Loading';
 
 interface Props {
   markers?: Marker[];
+  onPress?: (event: MapEvent<{}>) => void;
 }
 
-export const Map = ({markers}: Props) => {
+export const Map = ({markers, onPress}: Props) => {
   const [showPolyLine, setShowPolyLine] = useState(true);
   const {
     hasLocation,
@@ -61,6 +62,7 @@ export const Map = ({markers}: Props) => {
       <MapView
         ref={el => (mapViewRef.current = el!)}
         showsUserLocation
+        showsMyLocationButton={false}
         style={{flex: 1}}
         initialRegion={{
           latitude: initialPosition.latitude,
@@ -68,16 +70,9 @@ export const Map = ({markers}: Props) => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
-        onTouchStart={() => (following.current = false)}>
-        {/* <Marker
-          image={require('../assets/custom-marker.png')}
-          coordinate={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-          }}
-          title="Esto es un Titulo"
-          description="Esto es una descripción"
-        /> */}
+        onTouchStart={() => (following.current = false)}
+        onPress={onPress}>
+        {markers?.map(marker => marker)}
       </MapView>
       <Fab
         iconName="compass-outline"

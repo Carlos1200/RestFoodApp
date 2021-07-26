@@ -103,11 +103,11 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
-    alignItems: 'center',
   },
   drawerContainer: {
     flex: 1,
     marginLeft: 20,
     borderTopLeftRadius: 30,
+    alignItems: 'center',
   },
 });

@@ -41,6 +41,7 @@ export const CustomButton = ({
 const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
+    alignSelf: 'center',
     width: '90%',
     paddingVertical: 10,
     paddingHorizontal: 10,

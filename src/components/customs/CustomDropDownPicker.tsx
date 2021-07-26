@@ -14,6 +14,7 @@ export const CustomDropDownPicker = ({
   multiple,
   open,
   setOpen,
+  zIndex,
 }: Props) => {
   const {
     theme: {
@@ -30,6 +31,9 @@ export const CustomDropDownPicker = ({
       placeholder={placeholder}
       placeholderStyle={{color: text}}
       multiple={multiple}
+      listMode="SCROLLVIEW"
+      zIndex={zIndex}
+      dropDownDirection="BOTTOM"
       style={{
         backgroundColor: background,
         borderColor: border,

@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {HomeScreen} from '../screen/HomeScreen';
-import {NuevaSucursal} from '../screen/NuevaSucursal';
+import {NuevaSucursalScreen} from '../screen/NuevaSucursalScreen';
 import {MenuInterno} from '../components/MenuInterno';
 import {ThemeContext} from '../context/theme/ThemeContext';
 
@@ -25,7 +25,7 @@ export const MyDrawer = () => {
       }}
       drawerContent={props => <MenuInterno {...props} />}>
       <Drawer.Screen name="HomeScreen" component={HomeScreen} />
-      <Drawer.Screen name="NuevaSucursal" component={NuevaSucursal} />
+      <Drawer.Screen name="NuevaSucursal" component={NuevaSucursalScreen} />
     </Drawer.Navigator>
   );
 };

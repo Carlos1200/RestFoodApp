@@ -26,9 +26,15 @@ export const validarLogin = yup.object().shape({
 
 export const validationNuevaSucursal = yup.object().shape({
   nombre: yup.string().required('Ingresar un nombre de la sucursal'),
-  tipo: yup.string().required('Selecciona un tipo de sucursal'),
-  // diasLaboral: yup
-  //   .array()
-  //   .min(1, 'Selecciona como mínimo 1 día laboral')
-  //   .required('Selecciona un día laboral '),
+  tipo: yup.string().required('Selecciona un tipo de sucursal').nullable(),
+  dias: yup
+    .array()
+    .min(1, 'Selecciona como mínimo 1 día laboral')
+    .required('Selecciona un día laboral ')
+    .nullable(),
+  ubicacion: yup.object().shape({
+    latitude: yup
+      .number()
+      .test('Ubica tu sucursal en el mapa', number => number !== 0),
+  }),
 });
