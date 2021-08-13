@@ -1,10 +1,10 @@
-import {ApolloClient, createHttpLink, InMemoryCache} from '@apollo/client';
-import fetch from 'node-fetch';
+import {ApolloClient, InMemoryCache} from '@apollo/client';
+import {createUploadLink} from 'apollo-upload-client';
 import {setContext} from '@apollo/client/link/context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const httpLink = createHttpLink({
-  uri: 'http://192.168.0.112:4000/',
+const httpLink = createUploadLink({
+  uri: 'http://192.168.0.112:4000/graphql',
   //   fetch,
 });
 

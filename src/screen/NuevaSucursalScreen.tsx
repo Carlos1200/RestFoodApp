@@ -6,6 +6,7 @@ import {FormValues, NuevaSucursal} from '../components/NuevaSucursal';
 import {NUEVA_EMPRESA} from '../helper/Mutations';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import {OBTENER_EMPRESAS} from '../helper/Querys';
+import {ReactNativeFile} from 'apollo-upload-client';
 
 interface Props extends DrawerScreenProps<any, any> {}
 
@@ -27,8 +28,23 @@ export const NuevaSucursalScreen = ({navigation}: Props) => {
   const [error, setError] = useState(null);
 
   const crearSucursal = async (valores: FormValues) => {
-    const {nombre, informacion, tipo, horaFinal, horaInicio, dias, ubicacion} =
-      valores;
+    const {
+      nombre,
+      informacion,
+      tipo,
+      horaFinal,
+      horaInicio,
+      dias,
+      ubicacion,
+      imageData,
+    } = valores;
+
+    const picture = new ReactNativeFile({
+      uri: imageData.uri,
+      type: imageData.type,
+      name: imageData.name,
+    });
+
     try {
       await nuevaEmpresa({
         variables: {
@@ -45,10 +61,11 @@ export const NuevaSucursalScreen = ({navigation}: Props) => {
               lat: ubicacion.latitude,
               lon: ubicacion.longitude,
             },
+            imagen: picture,
           },
         },
       });
-      navigation.jumpTo('HomeScreen');
+      // navigation.jumpTo('HomeScreen');
     } catch (error) {
       setError(error.message);
       setTimeout(() => {
@@ -69,11 +86,16 @@ export const NuevaSucursalScreen = ({navigation}: Props) => {
           latitude: 0,
           longitude: 0,
         },
+        imageData: {
+          uri: '',
+          type: '',
+          name: '',
+        },
       }}
       validationSchema={validationNuevaSucursal}
       onSubmit={(values, actions) => {
         crearSucursal(values);
-        actions.resetForm();
+        // actions.resetForm();
       }}>
       {({
         values,

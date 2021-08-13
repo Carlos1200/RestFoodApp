@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Text, View, StyleSheet, ScrollView} from 'react-native';
+import {Text, View, StyleSheet, ScrollView, Image} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {FormikProps} from 'formik';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import moment from 'moment';
 import {CustomDropDownPicker} from '../components/customs/CustomDropDownPicker';
 import {CustomInput} from '../components/customs/CustomInput';
@@ -22,6 +22,11 @@ export interface FormValues {
   ubicacion: {
     latitude: number;
     longitude: number;
+  };
+  imageData: {
+    uri: string;
+    type: string;
+    name: string;
   };
 }
 
@@ -51,6 +56,7 @@ export const NuevaSucursal = ({
     const [OpenDias, setOpenDias] = useState(false);
     const [OpenTimeInicial, setOpenTimeInicial] = useState(false);
     const [OpenTimeFinal, setOpenTimeFinal] = useState(false);
+    const [TemURI, setTemURI] = useState<string>();
 
     useEffect(() => {
       setFieldValue('dias', dias);
@@ -58,6 +64,42 @@ export const NuevaSucursal = ({
     useEffect(() => {
       setFieldValue('tipo', tipo);
     }, [tipo]);
+    const takePhoto = () => {
+      launchCamera(
+        {
+          mediaType: 'photo',
+          quality: 0.5,
+        },
+        resp => {
+          if (resp.didCancel) return;
+
+          if (!resp.assets![0].uri) return;
+
+          setTemURI(resp.assets![0].uri);
+          const {uri, type, fileName} = resp.assets![0];
+
+          setFieldValue('imageData', {uri, type, name: fileName});
+        },
+      );
+    };
+    const takePhotoFromGallery = () => {
+      launchImageLibrary(
+        {
+          mediaType: 'photo',
+          quality: 0.5,
+        },
+        resp => {
+          if (resp.didCancel) return;
+
+          if (!resp.assets![0].uri) return;
+
+          const {uri, type, fileName} = resp.assets![0];
+
+          setTemURI(resp.assets![0].uri);
+          setFieldValue('imageData', {uri, type, name: fileName});
+        },
+      );
+    };
 
     return (
       <>
@@ -237,6 +279,29 @@ export const NuevaSucursal = ({
                     }}
                   />
                 )}
+
+                <Text style={{...styles.text, color: text, marginVertical: 10}}>
+                  Selecciona una imagen (Opcional)
+                </Text>
+                {TemURI ? (
+                  <View style={{height: 500}}>
+                    <Image source={{uri: TemURI}} style={{flex: 1}} />
+                  </View>
+                ) : (
+                  <>
+                    <CustomButton
+                      title="Tomar una foto"
+                      iconName="camera-outline"
+                      onPress={takePhoto}
+                    />
+                    <CustomButton
+                      title="Subir desde la galería"
+                      iconName="image-outline"
+                      onPress={takePhotoFromGallery}
+                    />
+                  </>
+                )}
+
                 <Text style={{...styles.text, color: text, marginTop: 15}}>
                   Muestranos tu ubicación en el mapa
                 </Text>
@@ -251,6 +316,7 @@ export const NuevaSucursal = ({
                     markers={[
                       (
                         <Marker
+                          key={15131681}
                           image={require('../assets/custom-marker.png')}
                           coordinate={values.ubicacion}
                           title={values.nombre || 'Nombre de la sucursal'}

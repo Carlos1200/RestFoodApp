@@ -70,6 +70,7 @@ export const LoginScreen = ({navigation}: Props) => {
           tokenGoogle: idToken,
         },
       });
+      console.log(data);
 
       LogIn({
         usuario: data.nuevoUsuarioGoogle.usuario,
